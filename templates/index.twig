@@ -1,0 +1,58 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira Statistic</title>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <div style="margin-bottom:30px">
+        <div>GET параметры:</div>
+        <div>user={username} - логин пользователя</div>
+        <div>group={№группы} - статистика по номеру группы(по умолчанию 5 группа)</div>
+        <div>user={username}&detail=Y - активность по дням для пользователя</div>
+    </div>
+    {%if detail == "Y" and arUsers|length==1 %}
+        {#one user - one iteration#}
+        {%for login, data in arUsers %}
+            <h1>Активность по дням для {{login}}(всего задач {{ data["unique_issues"]|length }})</h1>
+            {% for date, arIssues in data["issues"] %}
+            <div style="margin: 20px 0;">
+                <h2>{{date}}</h2>
+                {% for issue in arIssues %}
+                    <div>
+                        <a href="<?=$issue['url']?>">{{issue['name']}}</a>    
+                    </div>    
+                {%endfor%}
+            </div>
+            {%endfor%}    
+        {%endfor%}
+    {%else%}
+      <h1>Статистика</h1>
+      <table>
+            <tr>
+                <th>Пользователь</th>
+                <th>Среднее кол-во задач в день</th>
+                <th>Всего задач</th>
+                <th>Работал(дней)</th>
+                <th>Рабочих дней прошло</th>
+                <th>Рабочих дней всего</th>
+            </tr>
+            {% for login, data in arUsers %}
+                <tr>
+                    <td>{{login}}</td>
+                    <td>{{(arUsers[login]["unique_issues"]|length/worked)|round(2, 'floor')}}</td>
+                    <td>{{arUsers[login]["unique_issues"]|length}}</td>
+                    <td>{{arUsers[login]["issues"]|length}}</td>
+                    <td>{{worked}}</td>
+                    <td>{{working}}</td>
+                    <td><a target="_blank" href="?user={{login}}&detail=Y">Подробнее</a></td>
+                </tr>
+           {%endfor%}
+      </table>
+    {%endif%}
+  
+
+  </body>
