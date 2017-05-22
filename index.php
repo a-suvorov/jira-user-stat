@@ -15,24 +15,9 @@ $user_login = $arUserLogin["jira_access_user"];
 $pass_login = $arUserLogin["jira_access_pass"];
 $jira_address = $arUserLogin["jira_access_url"];
 $nonFormatUrl = $jira_address.$nonFormatUrl;
-/*
-$arUsers = [
-	//["login"=>"r.kalinin", "status"=>"m"],
-	"a.suvorov" 	=> ["status"=>"s", "time"=>"1"],
-	"e.ladutko" 	=> ["status"=>"p", "time"=>"1"],
-	"a.bychkov" 	=> ["status"=>"p", "time"=>"1"],
-	"a.orlov" 		=> ["status"=>"w", "time"=>"1"],
-	"m.rumyantsev"  => ["status"=>"j", "time"=>"1"],
-	"a.mikhailov" 	=> ["status"=>"w", "time"=>"1"],
-	"a.korneva"  	=> ["status"=>"w", "time"=>"1"],
-	"t.novikov"  	=> ["status"=>"w", "time"=>"1"],
-	"o.shumilin" 	=> ["status"=>"j", "time"=>"1"],
-	"k.lobzova"		=> ["status"=>"w", "time"=>"1"],
-	"s.chuikov"		=> ["status"=>"w", "time"=>"1"],
-];
-*/
+
 $arUsers = \Jira\User::getList(htmlspecialchars($_GET["group"]));
-//echo "<pre>"; print_r($arUsers); echo "</pre>";
+
 
 $calendar = new \Jira\Calendar();
 //если хотим получить информацию только по 1 пользователю
