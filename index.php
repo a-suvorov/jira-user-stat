@@ -1,5 +1,5 @@
-<?
-require 'vendor\autoload.php';
+<?$start = microtime(true);
+require __DIR__.'/vendor/autoload.php';
 
 //$smarty = new Smarty();
 $loader = new Twig_Loader_Filesystem(__DIR__."/templates/");
@@ -16,8 +16,9 @@ $pass_login = $arUserLogin["jira_access_pass"];
 $jira_address = $arUserLogin["jira_access_url"];
 $nonFormatUrl = $jira_address.$nonFormatUrl;
 
-$arUsers = \Jira\User::getList(htmlspecialchars($_GET["group"]));
-
+$group = isset($_GET["group"]) ? htmlspecialchars($_GET["group"]) : "";
+$arUsers = \Jira\User::getList($group);
+//echo "<pre>"; print_r($arUsers); echo "</pre>";
 
 $calendar = new \Jira\Calendar();
 //если хотим получить информацию только по 1 пользователю
@@ -31,9 +32,9 @@ foreach ($arUsers as $login => $data) {
 
 	$url = sprintf($nonFormatUrl, $startDate, $endDate, $login);//формируем url для получения данных
 	$result = sendQuery($url, $user_login, $pass_login);
-
 	/*анализируем результат*/
 	$xml = simplexml_load_string($result);
+
 	$countOfAction = count($xml->entry);
 	//начинаем с конца чтобы накапливать с первого числа месяца задачи
 	for ($i = $countOfAction-1; $i>=0; $i--) { 
@@ -63,6 +64,7 @@ foreach ($arUsers as $login => $data) {
 	}
 	$arUsers[$login]["unique_issues"] = $arUniqueIssues;
 }
+
 echo $twig->render('index.twig', array(
 					"arUsers"=>$arUsers,
 					"worked"=>$calendar->getWorkedDays(), 
@@ -70,6 +72,9 @@ echo $twig->render('index.twig', array(
 					"detail"=>$_GET["detail"]
 					));
 
+$time = microtime(true) - $start;
+echo "<br><br>";
+printf('Скрипт выполнялся %.4F сек.', $time);
 
 function sendQuery($url, $user, $pass){
 		$ch = curl_init();

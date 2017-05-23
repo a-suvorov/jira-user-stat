@@ -1,7 +1,6 @@
 /.idea
 /templates_c
 /vendor
-
 /*.lock
-
 /*.phar
+/classes/Config.php
