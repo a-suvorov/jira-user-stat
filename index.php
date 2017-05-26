@@ -39,7 +39,8 @@ foreach ($arUsers as $login => $data) {
 	//начинаем с конца чтобы накапливать с первого числа месяца задачи
 	for ($i = $countOfAction-1; $i>=0; $i--) { 
 		$arIssue = array();
-		if (($xml->entry[$i]->content) && ((strpos($xml->entry[$i]->title, "commented") !== false) || (strpos($xml->entry[$i]->title, "resolved") !== false)))
+		//echo $xml->entry[$i]->title;
+		if (($xml->entry[$i]->content) && ((stripos($xml->entry[$i]->title, "assignee") !== false) || (stripos($xml->entry[$i]->title, "commented") !== false) || (stripos($xml->entry[$i]->title, "resolved") !== false)))
 		{ 
 			$issue_date = date("d-m-Y", strtotime($xml->entry[$i]->updated));
 			$arIssueUrl = explode("?", $xml->entry[$i]->link[0]->attributes()->href);
