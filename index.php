@@ -39,8 +39,9 @@ foreach ($arUsers as $login => $data) {
 	//начинаем с конца чтобы накапливать с первого числа месяца задачи
 	for ($i = $countOfAction-1; $i>=0; $i--) { 
 		$arIssue = array();
-		//echo $xml->entry[$i]->title;
-		if (($xml->entry[$i]->content) && ((stripos($xml->entry[$i]->title, "assignee") !== false) || (stripos($xml->entry[$i]->title, "commented") !== false) || (stripos($xml->entry[$i]->title, "resolved") !== false)))
+		//echo "<pre>";print_r($xml->entry[$i]) ;echo "</pre>";
+		//exit;
+		if (isActivity($xml->entry[$i]))
 		{ 
 			$issue_date = date("d-m-Y", strtotime($xml->entry[$i]->updated));
 			$arIssueUrl = explode("?", $xml->entry[$i]->link[0]->attributes()->href);
@@ -82,12 +83,17 @@ function sendQuery($url, $user, $pass){
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_URL,  $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10000);
+  //      curl_setopt($ch, CURLOPT_TIMEOUT, 10000);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_USERPWD, $user.":".$pass);
         $response = curl_exec($ch);
         return $response;
+}
+
+function isActivity($xml_entity){
+	if (($xml_entity->content) && ((stripos($xml_entity->title, "assignee") !== false) || (stripos($xml_entity->title, "commented") !== false) || (stripos($xml_entity->title, "resolved") !== false))) return true;
+	if (stripos($xml_entity->link[0]->attributes()->href, "focusedCommentId") !== false) return true;
 }
 
 ?>
