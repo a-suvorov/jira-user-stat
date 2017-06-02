@@ -92,8 +92,17 @@ function sendQuery($url, $user, $pass){
 }
 
 function isActivity($xml_entity){
-	if (($xml_entity->content) && ((stripos($xml_entity->title, "assignee") !== false) || (stripos($xml_entity->title, "commented") !== false) || (stripos($xml_entity->title, "resolved") !== false))) return true;
-	if (stripos($xml_entity->link[0]->attributes()->href, "focusedCommentId") !== false) return true;
+	//echo "<pre>";print_r($xml_entity);echo "</pre>";
+	$title = strip_tags($xml_entity->title);
+	if (($xml_entity->content) && ((stripos($title, "Assignee") !== false) || (stripos($title, "commented") !== false) || (stripos($title, "closed") !== false) || (stripos($title, "resolved") !== false) )) {
+			return true;
+		}
+	if (stripos($xml_entity->link[0]->attributes()->href, "focusedCommentId") !== false) {
+		//echo $xml_entity->link[0]->attributes()->href;
+		return true;
+	}
+	return false;
+	
 }
 
 ?>
