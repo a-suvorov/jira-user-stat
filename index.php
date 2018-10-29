@@ -9,6 +9,9 @@ $twig = new Twig_Environment($loader, array(
     'auto_reload' => true,
 ));
 
+//$memcache_obj = new Memcache;
+//$memcache_obj->connect('127.0.0.1', 11211) or die(«Could not connect»);
+
 $nonFormatUrl = "/activity?maxResults=2000&streams=update-date+BETWEEN+%s+%s&streams=user+IS+%s";
 $arUserLogin = \Jira\Config::getJiraLoginData();
 $user_login = $arUserLogin["jira_access_user"];
