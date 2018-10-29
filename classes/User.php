@@ -9,7 +9,7 @@ class User{
 		$json_users = \Jira\Config::getResource($get_users_url);
 		$arUsers = json_decode($json_users, true);
 		foreach ($arUsers as $value) {
-			$arResult[$value["key"]] = array();
+			$arResult[$value["name"]] = array();
 		}
 		return $arResult;
 	}	
