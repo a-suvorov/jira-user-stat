@@ -10,6 +10,7 @@
   <body>
     <div style="margin-bottom:30px">
         <div>GET параметры:</div>
+        <div>month={№ месяца} - статистика за определенный месяц</div>
         <div>user={username} - логин пользователя</div>
         <div>group={№группы} - статистика по номеру группы(по умолчанию 5 группа)</div>
         <div>user={username}&detail=Y - активность по дням для пользователя</div>
@@ -30,7 +31,7 @@
             {%endfor%}    
         {%endfor%}
     {%else%}
-      <h1>Статистика</h1>
+      <h1>Статистика за {{month}}</h1>
       <table>
             <tr>
                 <th>Пользователь</th>
@@ -48,7 +49,7 @@
                     <td>{{arUsers[login]["issues"]|length}}</td>
                     <td>{{worked}}</td>
                     <td>{{working}}</td>
-                    <td><a target="_blank" href="?user={{login}}&detail=Y">Подробнее</a></td>
+                    <td><a target="_blank" href="?month={{month}}&user={{login}}&detail=Y">Подробнее</a></td>
                 </tr>
            {%endfor%}
       </table>
