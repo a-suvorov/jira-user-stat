@@ -2,6 +2,21 @@
 require __DIR__.'/vendor/autoload.php';
 
 //$smarty = new Smarty();
+$arMonth = array(
+	"01" => "январь",
+	"02" => "февраль",
+	"03" => "март",
+	"04" => "апрель",
+	"05" => "май",
+	"06" => "июнь",
+	"07" => "июль",
+	"08" => "август",
+	"09" => "сентябрь",
+	"10" => "октябрь",
+	"11" => "ноябрь",
+	"12" => "декабрь",
+);
+
 $loader = new Twig_Loader_Filesystem(__DIR__."/templates/");
 $twig = new Twig_Environment($loader, array(
     'cache' => __DIR__.'/templates_c/',
@@ -19,6 +34,9 @@ $pass_login = $arUserLogin["jira_access_pass"];
 $jira_address = $arUserLogin["jira_access_url"];
 $nonFormatUrl = $jira_address.$nonFormatUrl;
 
+//моем получить статистику за определенный месяц
+
+
 $group = isset($_GET["group"]) ? htmlspecialchars($_GET["group"]) : "";
 $arUsers = \Jira\User::getList($group);
 //echo "<pre>"; print_r($arUsers); echo "</pre>";
@@ -28,8 +46,15 @@ $calendar = new \Jira\Calendar();
 if (isset($_GET["user"])){
 	$arUsers = [htmlspecialchars($_GET["user"]) => array()];
 }
-$startDate =  strtotime(date("Y-m-01 00:00:00"))."000";
-$endDate = strtotime(date("Y-m-t 23:59:59" ))."999"; 
+
+$month =  ($_GET["month"]) ? $_GET["month"] : date("m");
+if (strlen($month) == 1) $month = "0".$month;
+//echo $month;
+//exit;
+
+$startDate =  strtotime(date("Y-".$month."-01 00:00:00"))."000";
+$endDate = strtotime(date("Y-".$month."-t 23:59:59" ))."999"; 
+
 foreach ($arUsers as $login => $data) {
 	$arUniqueIssues = array();////массив с задачами пользователя, без повторений.
 
@@ -74,6 +99,7 @@ echo $twig->render('index.twig', array(
 					"arUsers"=>$arUsers,
 					"worked"=>$calendar->getWorkedDays(), 
 					"working"=>$calendar->getWorkingDays(), 
+					"month" => $arMonth[$month],
 					"detail"=>$_GET["detail"]
 					));
 
